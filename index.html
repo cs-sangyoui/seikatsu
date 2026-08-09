@@ -51,7 +51,7 @@ nav.tabs button.on{color:var(--c-sleep); font-weight:700;}
 /* timeline grid */
 .tl-wrap{margin-top:6px;}
 .tl-hours{display:grid; grid-template-columns:repeat(24,1fr); font-size:9.5px; color:var(--sub); margin-bottom:2px;}
-.tl-hours span{grid-column:span 2; text-align:left;}
+.tl-hours span{grid-column:span 2; text-align:left; border-left:1px solid #dee2e6; padding-left:1px;}
 .tl-row{display:grid; grid-template-columns:repeat(24,1fr); gap:1px; touch-action:none; user-select:none; -webkit-user-select:none;}
 .cell{height:38px; background:var(--c-empty); position:relative; border-radius:2px;}
 .cell.c-sleep{background:var(--c-sleep);} .cell.c-nap{background:var(--c-nap);}
@@ -105,8 +105,12 @@ textarea#comment{width:100%; border:1px solid var(--line); border-radius:8px; pa
 .wk-bar i.c-out{background:var(--c-out);} .wk-bar i.c-meal{background:var(--c-meal);} .wk-bar i.c-act{background:var(--c-act);}
 .wk-bar i.med::after{content:"★"; position:absolute; top:-2px; left:-2px; font-size:8px; color:#e03131;}
 .wk-comment{font-size:12px; color:var(--sub); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.wk-scalebar{display:grid; grid-template-columns:repeat(48,1fr); font-size:8.5px; color:var(--sub); margin-bottom:3px; white-space:nowrap;}
-.wk-scalebar span{grid-column:span 4; border-left:1px solid #ced4da; padding-left:1px; line-height:1.4; overflow:visible;}
+.wk-scalebar{display:grid; grid-template-columns:repeat(48,1fr); font-size:8px; color:var(--sub); margin-bottom:3px; white-space:nowrap;}
+.wk-scalebar span{grid-column:span 2; border-left:1px solid #ced4da; padding-left:1px; line-height:1.5; overflow:visible;}
+@media (max-width:520px){
+  .wk-scalebar{font-size:6.5px; letter-spacing:-0.3px;}
+  .wk-scalebar span{padding-left:0;}
+}
 .wk-bar i.tick{box-shadow:inset 1px 0 0 rgba(255,255,255,.8), inset 2px 0 0 rgba(0,0,0,.18);}
 .wk-bar i.tick1{box-shadow:inset 1px 0 0 rgba(0,0,0,.10);}
 .toast{position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:rgba(33,37,41,.92); color:#fff;
@@ -642,13 +646,10 @@ function buildGrid(){
   const hours2 = document.getElementById("hours2");
   [hours1,hours2].forEach((el,ri)=>{
     el.innerHTML = "";
-    for(let h=0; h<12; h+=2){
+    for(let h=0; h<12; h++){
       const sp = document.createElement("span");
-      const slot = ri*24 + h*2;
-      sp.textContent = slotLabel(slot).replace(":00","時").replace(":30","時半");
+      sp.textContent = (4 + ri*12 + h) % 24; // 1時間ごとに数字のみ
       el.appendChild(sp);
-      const sp2 = document.createElement("span"); // 2時間おきラベル（spanは2列分）
-      el.appendChild(sp2);
     }
   });
   const r1 = document.getElementById("row1"), r2 = document.getElementById("row2");
@@ -867,7 +868,7 @@ function renderWeek(){
   // 時刻目盛り（4時間ごと）
   const sc = document.createElement("div");
   sc.className = "wk-scalebar";
-  ["4時","6時","8時","10時","12時","14時","16時","18時","20時","22時","0時","2時"].forEach(t=>{
+  Array.from({length:24},(_,i)=>(4+i)%24).forEach(t=>{
     const s = document.createElement("span"); s.textContent = t; sc.appendChild(s);
   });
   wrap.appendChild(sc);
