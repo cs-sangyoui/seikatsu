@@ -105,9 +105,10 @@ textarea#comment{width:100%; border:1px solid var(--line); border-radius:8px; pa
 .wk-bar i.c-out{background:var(--c-out);} .wk-bar i.c-meal{background:var(--c-meal);} .wk-bar i.c-act{background:var(--c-act);}
 .wk-bar i.med::after{content:"★"; position:absolute; top:-2px; left:-2px; font-size:8px; color:#e03131;}
 .wk-comment{font-size:12px; color:var(--sub); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.wk-scalebar{display:grid; grid-template-columns:repeat(48,1fr); font-size:9.5px; color:var(--sub); margin-bottom:3px;}
-.wk-scalebar span{grid-column:span 8; border-left:1px solid #ced4da; padding-left:3px; line-height:1.4;}
+.wk-scalebar{display:grid; grid-template-columns:repeat(48,1fr); font-size:8.5px; color:var(--sub); margin-bottom:3px; white-space:nowrap;}
+.wk-scalebar span{grid-column:span 4; border-left:1px solid #ced4da; padding-left:1px; line-height:1.4; overflow:visible;}
 .wk-bar i.tick{box-shadow:inset 1px 0 0 rgba(255,255,255,.8), inset 2px 0 0 rgba(0,0,0,.18);}
+.wk-bar i.tick1{box-shadow:inset 1px 0 0 rgba(0,0,0,.10);}
 .toast{position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:rgba(33,37,41,.92); color:#fff;
   padding:10px 18px; border-radius:20px; font-size:14px; z-index:99; opacity:0; transition:opacity .25s; pointer-events:none;}
 .toast.show{opacity:1;}
@@ -866,7 +867,7 @@ function renderWeek(){
   // 時刻目盛り（4時間ごと）
   const sc = document.createElement("div");
   sc.className = "wk-scalebar";
-  ["4時","8時","12時","16時","20時","0時"].forEach(t=>{
+  ["4時","6時","8時","10時","12時","14時","16時","18時","20時","22時","0時","2時"].forEach(t=>{
     const s = document.createElement("span"); s.textContent = t; sc.appendChild(s);
   });
   wrap.appendChild(sc);
@@ -905,7 +906,8 @@ function renderWeek(){
       const seg=document.createElement("i");
       if(rec.slots[j]) seg.classList.add(CATS[rec.slots[j]].cls);
       if(rec.med[j]) seg.classList.add("med");
-      if(j>0 && j%8===0) seg.classList.add("tick"); // 4時間ごとの区切り
+      if(j>0 && j%4===0) seg.classList.add("tick");        // 2時間ごとの区切り（濃）
+      else if(j>0 && j%2===0) seg.classList.add("tick1");  // 1時間ごとの区切り（薄）
       bar.appendChild(seg);
     }
     const cm = document.createElement("div");
