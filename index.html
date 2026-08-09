@@ -297,12 +297,8 @@ button.danger{background:#fff; color:var(--warn); border:1px solid var(--warn); 
   <!-- ===== 設定 ===== -->
   <section class="view" id="view-settings">
     <div class="card">
-      <h2>基本</h2>
-      <div class="set-row"><label>氏名（週表示・印刷に表示）</label><input type="text" id="s-name"></div>
-    </div>
-    <div class="card">
       <h2>フィードバックの基準値</h2>
-      <p class="hint">初期値には、国の健康づくりに関する推奨値（厚生労働省「健康づくりのための睡眠ガイド2023」「身体活動・運動ガイド2023」「健康日本21」等）を参考にした値と、一般的な生活例として置いた値が含まれます。すべての値が医学的基準を示すものではありません。年齢・勤務時間・疾病・治療状況により適切な目標は異なるため、必要に応じて主治医・産業医の指示に合わせて変更してください。</p>
+      <p class="hint">初期値には、国の健康づくりに関する推奨値（厚生労働省「健康づくりのための睡眠ガイド2023」「身体活動・運動ガイド2023」「健康日本21」等）を参考にした値と、一般的な生活例として置いた値が含まれます。すべての値が医学的基準を示すものではありません。年齢・勤務時間・疾病・治療状況により適切な目標は異なるため、必要に応じて担当医の指示などに合わせて変更してください。</p>
       <div class="set-row"><label>夜間睡眠の注意ライン（未満で注意）</label><input type="number" id="s-sleepMin" step="0.5" min="0" max="24"><span class="unit">時間</span></div>
       <div class="set-row"><label>夜間睡眠の推奨下限</label><input type="number" id="s-sleepGood" step="0.5" min="0" max="24"><span class="unit">時間</span></div>
       <div class="set-row"><label>夜間睡眠の上限（超えると情報表示）</label><input type="number" id="s-sleepMax" step="0.5" min="0" max="24"><span class="unit">時間</span></div>
@@ -849,10 +845,9 @@ function renderWeek(){
     const a=parseDate(weekStart), b=parseDate(addDays(weekStart,6));
     return `${a.getFullYear()}年${a.getMonth()+1}月${a.getDate()}日 〜 ${b.getMonth()+1}月${b.getDate()}日`;
   })();
-  const nm = db.name ? `${db.name}　` : "";
   document.getElementById("wk-label").textContent = label;
   const lp = document.getElementById("wk-label-print");
-  lp.textContent = nm + "生活記録　" + label;
+  lp.textContent = "生活記録　" + label;
   const wrap = document.getElementById("wk-days");
   wrap.innerHTML = "";
   let sleepSum=0, sleepN=0, outDays=0, actSum=0, actN=0, moodSum=0, moodN=0, restSum=0, restN=0;
@@ -913,8 +908,7 @@ function renderWeek(){
 function aiSummaryText(){
   const a = parseDate(weekStart), b = parseDate(addDays(weekStart,6));
   const lines = [];
-  lines.push((db.name ? db.name + "　" : "") +
-    `生活記録サマリー（${a.getFullYear()}年${a.getMonth()+1}月${a.getDate()}日〜${b.getMonth()+1}月${b.getDate()}日）`);
+  lines.push(`生活記録サマリー（${a.getFullYear()}年${a.getMonth()+1}月${a.getDate()}日〜${b.getMonth()+1}月${b.getDate()}日）`);
   lines.push("");
   for(let i=0;i<7;i++){
     const key = addDays(weekStart,i);
@@ -1035,8 +1029,6 @@ const SETTING_FIELDS = [
   ["s-fbOut","fbOut","bool"],["s-fbMeal","fbMeal","bool"],["s-fbMed","fbMed","bool"],
 ];
 function setupSettings(){
-  const nameEl = document.getElementById("s-name");
-  nameEl.addEventListener("input", ()=>{ db.name = nameEl.value; save(); renderName(); });
   SETTING_FIELDS.forEach(([id,key,type])=>{
     const el = document.getElementById(id);
     el.addEventListener("change", ()=>{
@@ -1053,15 +1045,11 @@ function setupSettings(){
   });
 }
 function renderSettings(){
-  document.getElementById("s-name").value = db.name||"";
   SETTING_FIELDS.forEach(([id,key,type])=>{
     const el = document.getElementById(id);
     if(type==="bool") el.checked = !!db.settings[key];
     else el.value = db.settings[key];
   });
-}
-function renderName(){
-  document.getElementById("username-line").textContent = db.name ? db.name+" さんの記録" : "";
 }
 
 /* ================= タブ・全体 ================= */
@@ -1072,7 +1060,7 @@ function switchView(id){
   window.scrollTo(0,0);
 }
 function renderAll(){
-  renderName(); renderSettings(); renderInputView(); renderWeek();
+  renderSettings(); renderInputView(); renderWeek();
 }
 function init(){
   buildGrid(); buildPalette(); setupPainting(); buildRangeAdd(); buildMoodAct();
