@@ -105,7 +105,12 @@ textarea#comment{width:100%; border:1px solid var(--line); border-radius:8px; pa
 .wk-bar i.c-out{background:var(--c-out);} .wk-bar i.c-meal{background:var(--c-meal);} .wk-bar i.c-act{background:var(--c-act);}
 .wk-bar i.med::after{content:"★"; position:absolute; top:-2px; left:-2px; font-size:8px; color:#e03131;}
 .wk-comment{font-size:12px; color:var(--sub); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.wk-scale{display:flex; justify-content:space-between; font-size:9px; color:var(--sub); margin-bottom:2px;}
+.wk-scalebar{display:grid; grid-template-columns:repeat(48,1fr); font-size:9.5px; color:var(--sub); margin-bottom:3px;}
+.wk-scalebar span{grid-column:span 8; border-left:1px solid #ced4da; padding-left:3px; line-height:1.4;}
+.wk-bar i.tick{box-shadow:inset 1px 0 0 rgba(255,255,255,.8), inset 2px 0 0 rgba(0,0,0,.18);}
+.toast{position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:rgba(33,37,41,.92); color:#fff;
+  padding:10px 18px; border-radius:20px; font-size:14px; z-index:99; opacity:0; transition:opacity .25s; pointer-events:none;}
+.toast.show{opacity:1;}
 .wk-summary{font-size:13px; background:#f8f9fa; border-radius:8px; padding:8px 10px; margin-top:8px; line-height:1.8;}
 .wk-legend{display:flex; flex-wrap:wrap; gap:10px; font-size:11px; color:var(--sub); margin-top:8px;}
 .wk-legend span{display:flex; align-items:center; gap:4px;}
@@ -408,6 +413,14 @@ function save(){
       alertBox("保存に失敗しました。ブラウザの保存領域を確認してください。");
     }
   }, 250);
+}
+function toast(msg){
+  let t = document.getElementById("toast");
+  if(!t){ t = document.createElement("div"); t.id = "toast"; t.className = "toast"; document.body.appendChild(t); }
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=>{ t.classList.remove("show"); }, 1800);
 }
 function flashSaved(){
   const el = document.getElementById("savestate");
@@ -850,6 +863,13 @@ function renderWeek(){
   lp.textContent = "生活記録　" + label;
   const wrap = document.getElementById("wk-days");
   wrap.innerHTML = "";
+  // 時刻目盛り（4時間ごと）
+  const sc = document.createElement("div");
+  sc.className = "wk-scalebar";
+  ["4時","8時","12時","16時","20時","0時"].forEach(t=>{
+    const s = document.createElement("span"); s.textContent = t; sc.appendChild(s);
+  });
+  wrap.appendChild(sc);
   let sleepSum=0, sleepN=0, outDays=0, actSum=0, actN=0, moodSum=0, moodN=0, restSum=0, restN=0;
   for(let i=0;i<7;i++){
     const key = addDays(weekStart,i);
@@ -885,6 +905,7 @@ function renderWeek(){
       const seg=document.createElement("i");
       if(rec.slots[j]) seg.classList.add(CATS[rec.slots[j]].cls);
       if(rec.med[j]) seg.classList.add("med");
+      if(j>0 && j%8===0) seg.classList.add("tick"); // 4時間ごとの区切り
       bar.appendChild(seg);
     }
     const cm = document.createElement("div");
@@ -1096,8 +1117,7 @@ function init(){
   document.getElementById("wk-print").addEventListener("click", ()=>window.print());
   document.getElementById("wk-copy").addEventListener("click", ()=>{
     copyText(aiSummaryText(), ok=>{
-      document.getElementById("wk-copy-state").textContent =
-        ok ? "コピーしました。" : "コピーできませんでした。お使いのブラウザではこの機能が使えない可能性があります。";
+      toast(ok ? "コピーしました" : "コピーできませんでした");
     });
   });
 
