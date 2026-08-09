@@ -298,7 +298,7 @@ button.danger{background:#fff; color:var(--warn); border:1px solid var(--warn); 
   <section class="view" id="view-settings">
     <div class="card">
       <h2>フィードバックの基準値</h2>
-      <p class="hint">初期値には、国の健康づくりに関する推奨値（厚生労働省「健康づくりのための睡眠ガイド2023」「身体活動・運動ガイド2023」「健康日本21」等）を参考にした値と、一般的な生活例として置いた値が含まれます。すべての値が医学的基準を示すものではありません。年齢・勤務時間・疾病・治療状況により適切な目標は異なるため、必要に応じて担当医の指示などに合わせて変更してください。</p>
+      <p class="hint">初期値には、国の健康づくりに関する推奨値（厚生労働省「健康づくりのための睡眠ガイド2023」「身体活動・運動ガイド2023」「健康日本21」等）を参考にした値と、一般的な生活例として置いた値が含まれます。すべての値が医学的基準を示すものではありません。年齢・勤務時間・疾病・治療状況により適切な目標は異なるため、必要に応じて医師の指示などに合わせて変更してください。</p>
       <div class="set-row"><label>夜間睡眠の注意ライン（未満で注意）</label><input type="number" id="s-sleepMin" step="0.5" min="0" max="24"><span class="unit">時間</span></div>
       <div class="set-row"><label>夜間睡眠の推奨下限</label><input type="number" id="s-sleepGood" step="0.5" min="0" max="24"><span class="unit">時間</span></div>
       <div class="set-row"><label>夜間睡眠の上限（超えると情報表示）</label><input type="number" id="s-sleepMax" step="0.5" min="0" max="24"><span class="unit">時間</span></div>
@@ -313,7 +313,7 @@ button.danger{background:#fff; color:var(--warn); border:1px solid var(--warn); 
     <div class="card">
       <h2>評価コメントの表示（項目別）</h2>
       <p class="hint">オフにした項目は、良い・悪いの評価をせず、算出値（客観データ）だけが記録されます。
-      夜勤など生活リズムが一般的な目安と異なる方は、「就寝・起床時刻」の評価をオフにすることをおすすめします。
+      例えば、夜勤など生活リズムが日勤の目安と異なる方は「就寝・起床時刻」の評価をオフにすることも可能です。
       すべてオフにすると、評価のない「記録専用」の使い方になります。</p>
       <div class="set-row"><label>夜間睡眠時間の評価</label><input type="checkbox" id="s-fbSleep"></div>
       <div class="set-row"><label>就寝・起床時刻の評価</label><input type="checkbox" id="s-fbBedWake"></div>
