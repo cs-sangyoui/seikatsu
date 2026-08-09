@@ -254,10 +254,10 @@ button.danger{background:#fff; color:var(--warn); border:1px solid var(--warn); 
       <div class="wk-summary" id="wk-summary"></div>
       <div class="btnrow no-print">
         <button class="primary" id="wk-print">印刷／PDF保存</button>
-        <button class="ghost" id="wk-copy">AI相談用サマリーをコピー</button>
+        <button class="ghost" id="wk-copy">サマリーをコピー</button>
       </div>
       <p class="hint no-print">印刷画面では週表示だけが出力されます。診察時の提出用にお使いください。<br>
-      「AI相談用サマリー」は、この週の記録を文章にしてコピーするだけの機能です。自動でどこかに送信されることはありません。ClaudeなどのAIに貼り付けて相談したいときにお使いください。</p>
+      「サマリーをコピー」は、この週の記録を文章にしてコピーするだけの機能です。自動でどこかに送信されることはありません。</p>
       <p class="hint no-print" id="wk-copy-state"></p>
     </div>
   </section>
@@ -909,11 +909,12 @@ function renderWeek(){
   document.getElementById("wk-summary").innerHTML = "【週のまとめ】<br>" + sm.join("<br>");
 }
 
-/* ================= AI相談用サマリー ================= */
+/* ================= 週間サマリー ================= */
 function aiSummaryText(){
+  const a = parseDate(weekStart), b = parseDate(addDays(weekStart,6));
   const lines = [];
-  lines.push("以下は私の1週間の生活記録です。医学的な診断はせず、生活リズムの観点から、");
-  lines.push("良かった点と、無理のない改善の工夫を、断定を避けたやさしい言葉で5行以内でコメントしてください。");
+  lines.push((db.name ? db.name + "　" : "") +
+    `生活記録サマリー（${a.getFullYear()}年${a.getMonth()+1}月${a.getDate()}日〜${b.getMonth()+1}月${b.getDate()}日）`);
   lines.push("");
   for(let i=0;i<7;i++){
     const key = addDays(weekStart,i);
@@ -1108,7 +1109,7 @@ function init(){
   document.getElementById("wk-copy").addEventListener("click", ()=>{
     copyText(aiSummaryText(), ok=>{
       document.getElementById("wk-copy-state").textContent =
-        ok ? "コピーしました。AIのチャット画面に貼り付けてください。" : "コピーできませんでした。お使いのブラウザではこの機能が使えない可能性があります。";
+        ok ? "コピーしました。" : "コピーできませんでした。お使いのブラウザではこの機能が使えない可能性があります。";
     });
   });
 
